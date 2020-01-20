@@ -12,14 +12,21 @@ const urlDatabase = {
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
-app.post("/urls", (req, res) => {
-  console.log(req.body);  // Log the POST request body to the console
-  res.send("Ok");         // Respond with 'Ok' (we will replace this)
-});
-
-function generateRandomString() {
-
+function generateRandomString(length) {
+  let newStr = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+    newStr += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return newStr;
 }
+
+app.post("/urls", (req, res) => {
+  let newShortUrl = generateRandomString(6);
+  urlDatabase[newShortUrl] = `http://www.${req.body.longURL}`;
+  res.redirect("/urls/" + newShortUrl);
+});
 
 app.get("/", (req, res) => {
   res.send("Hello!");
@@ -49,4 +56,9 @@ app.get("/urls/new", (req, res) => {
 app.get("/urls/:shortURL", (req, res) => {
   let templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
   res.render("urls_show", templateVars);
+});
+
+app.get("/u/:shortURL", (req, res) => {
+  const longURL = urlDatabase[req.params.shortURL];
+  res.redirect(longURL);
 });
