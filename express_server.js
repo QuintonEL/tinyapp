@@ -45,14 +45,8 @@ function findUserByEmail(email) {
   }
 }
 
-app.post("/login", (req, res) => {
-  let user = req.body.username
-  res.cookie('username', user)
-  res.redirect("/urls");
-});
-
 app.post("/logout", (req, res) => {
-  res.clearCookie('username')
+  res.clearCookie('user_id')
   res.redirect("/urls");
 });
 
@@ -76,10 +70,10 @@ app.get("/urls.json", (req, res) => {
 
 app.get("/login", (req, res) => {
   // if cookie is set display logged in as
+  console.log(users)
+  console.log('cookie', req.cookies['user_id'])
   if (req.cookies['user_id']) {
-    const userID = req.cookies['user_id'];
-    let templateVars = { user: users[userID] };
-    res.render("login", templateVars);
+    res.redirect("/urls");
   } else { // no cookie log in
     let templateVars = { user: undefined }
     res.render("login", templateVars);
@@ -87,8 +81,28 @@ app.get("/login", (req, res) => {
 })
 
 app.post("/login", (req, res) => {
-  
-})
+    //check for valid input
+  if (!req.body.email || !req.body.password) {
+    res.status(400).send('Please enter an email and password');
+  } else {
+    //check if user exists
+    let thisUser = findUserByEmail(req.body.email);
+    if (!thisUser) {
+      //if they don't exist already
+      res.status(403).send('No Account Found!');
+    } else {
+      //if they exist already
+      //compare passwords
+      if (req.body.password !== thisUser['password']) {
+        res.status(403).send('Incorrect Password');
+      } else {
+        //set user_id cookie
+        res.cookie('user_id', thisUser['id']);
+        res.redirect("/urls");
+      }
+    }
+  }
+});
 
 app.get("/register", (req, res) => {
   // if cookie is set display id
@@ -104,6 +118,7 @@ app.get("/register", (req, res) => {
 
 app.post("/register", (req, res) => {
   //check for valid input
+  console.log(users)
   if (req.body.email.length === 0 || req.body.password.length === 0) {
     res.status(400).send('Please enter an email and password')
   } else {
@@ -117,7 +132,6 @@ app.post("/register", (req, res) => {
         password: req.body.password
       };
       res.cookie('user_id', userRandomID)
-      console.log(users[userRandomID])
     } else {
       //if they exist already
       res.status(400).send('An account with that email already exists!')
@@ -133,21 +147,18 @@ app.get("/hello", (req, res) => {
 app.get("/urls", (req, res) => {
   const userID = req.cookies['user_id'];
   let templateVars = { user: users[userID], urls: urlDatabase };
-  //let templateVars = { user: req.cookies["username"], urls: urlDatabase };
   res.render("urls_index", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
   const userID = req.cookies['user_id'];
   let templateVars = { user: users[userID] };
-  // let templateVars = { username: req.cookies["username"] }
   res.render("urls_new", templateVars);
 });
 
 app.get("/urls/:shortURL", (req, res) => {
   const userID = req.cookies['user_id'];
   let templateVars = { user: users[userID], shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
-  //let templateVars = { username: req.cookies["username"], shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
   res.render("urls_show", templateVars);
 });
 
@@ -173,31 +184,3 @@ app.post("/urls/:shortURL/update", (req, res) => {
   urlDatabase[shorty] = longy;
   res.redirect("/urls");
 });
-
-
-    //check if email already exists in users object
-    // for (let user of Object.values(users)) {
-    //   if (user['email'] === users[userRandomID]['email']) {
-    //     res.status(400).send('An account with that email already exists!')
-    //   }
-    // }
-
-// if (email.length === 0 || password.length === 0) {
-//   const extinguisher = findUserByEmail(email)
-//   if (extinguisher) {
-//     res.status(400).send('you already have an account')
-//   } else {
-//     const createUser = addUser(req.body);
-//       res.cookie('userID', createdUser.id)
-//   }
-// }
-// exports.findUserByEmail = (email) => {
-//   for (const user of Object.values(users)) {
-//     if (user.email === email) {
-//        return user;
-//     }
-//   }
-// }
-// use if else in header file to chenge what the user sees depending on whether or not they are loggged in
-// if (user) {logout and other normal options}
-// else {login and register}
