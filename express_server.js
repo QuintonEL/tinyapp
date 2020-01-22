@@ -11,6 +11,19 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+const users = { 
+  "userRandomID": {
+    id: "userRandomID", 
+    email: "user@example.com", 
+    password: "purple-monkey-dinosaur"
+  },
+ "user2RandomID": {
+    id: "user2RandomID", 
+    email: "user2@example.com", 
+    password: "dishwasher-funk"
+  }
+}
+
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -51,6 +64,23 @@ app.listen(PORT, () => {
 
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
+});
+
+app.get("/register", (req, res) => {
+  let templateVars = { username: req.cookies["username"] }
+  res.render("registration", templateVars);
+});
+
+app.post("/register", (req, res) => {
+  let userRandomID = generateRandomString(6);
+  users[userRandomID] = {
+    id: userRandomID, 
+    email: req.body.email, 
+    password: req.body.password
+  };
+  console.log(users[userRandomID])
+  res.cookie('user_id', userRandomID)
+  res.redirect("/urls");
 });
 
 app.get("/hello", (req, res) => {
@@ -94,3 +124,25 @@ app.post("/urls/:shortURL/update", (req, res) => {
   urlDatabase[shorty] = longy;
   res.redirect("/urls");
 });
+
+
+
+// if (email && password) {
+//   const extinguisher = findUserByEmail(email)
+//   if (extinguisher) {
+//     res.status(400).send('you already have an account')
+//   } else {
+//     const createUser = addUser(req.body);
+//       res.cookie('userID', createdUser.id)
+//   }
+// }
+// exports.findUserByEmail = (email) => {
+//   for (const user of Object.values(users)) {
+//     if (user.email === email) {
+//        return user;
+//     }
+//   }
+// }
+// use if else in header file to chenge what the user sees depending on whether or not they are loggged in
+// if (user) {logout and other normal options}
+// else {login and register}
