@@ -8,6 +8,23 @@
       <div class="navbar-nav">
         <a class="nav-item nav-link" href="/urls">My URLs</a>
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
+        <!-- <form method="POST" action="/login">
+          <input type="text" name="username" value="">
+          <input type="submit" value="Login" style="background-color:rgb(0, 153, 255); border-color:rgb(0, 153, 255); color:white; border-radius: 4px; border-width: 1px;">
+        </form> -->
+        <div name="myLogin" style="position: absolute; right: 10px; margin-top: 4px;">
+        <% if(username){ %>
+          <form method="POST" action="/logout">
+            Logged In As: <b><%=username%></b>
+            <input type="submit" value="Logout" style="background-color:transparent; border-color:black; color:black; border-radius: 4px; border-width: 1px;">
+          </form>
+        <% } else{ %>  
+          <form method="POST" action="/login">
+            <input type="text" name="username" value="">
+            <input type="submit" value="Login" style="background-color:transparent; border-color:black; color:black; border-radius: 4px; border-width: 1px;">
+          </form>
+       <% } %>
+      </div>
       </div>
     </div>
   </nav>
