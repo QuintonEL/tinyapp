@@ -37,6 +37,14 @@ function generateRandomString(length) {
   return newStr;
 }
 
+function findUserByEmail(email) {
+  for (const user of Object.values(users)) {
+    if (user['email'] === email) {
+      return user;
+    }
+  }
+}
+
 app.post("/login", (req, res) => {
   let user = req.body.username
   res.cookie('username', user)
@@ -72,14 +80,26 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-  let userRandomID = generateRandomString(6);
-  users[userRandomID] = {
-    id: userRandomID, 
-    email: req.body.email, 
-    password: req.body.password
-  };
-  console.log(users[userRandomID])
-  res.cookie('user_id', userRandomID)
+  //check for valid input
+  if (req.body.email.length === 0 || req.body.password.length === 0) {
+    res.status(400).send('Please enter an email and password')
+  } else {
+    //check if user exists
+    if (!findUserByEmail(req.body.email)) {
+      //if they don't exist already
+      let userRandomID = generateRandomString(6);
+      users[userRandomID] = {
+        id: userRandomID, 
+        email: req.body.email, 
+        password: req.body.password
+      };
+      res.cookie('user_id', userRandomID)
+      console.log(users[userRandomID])
+    } else {
+      //if they exist already
+      res.status(400).send('An account with that email already exists!')
+    }
+  }
   res.redirect("/urls");
 });
 
@@ -126,8 +146,14 @@ app.post("/urls/:shortURL/update", (req, res) => {
 });
 
 
+    //check if email already exists in users object
+    // for (let user of Object.values(users)) {
+    //   if (user['email'] === users[userRandomID]['email']) {
+    //     res.status(400).send('An account with that email already exists!')
+    //   }
+    // }
 
-// if (email && password) {
+// if (email.length === 0 || password.length === 0) {
 //   const extinguisher = findUserByEmail(email)
 //   if (extinguisher) {
 //     res.status(400).send('you already have an account')
