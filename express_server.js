@@ -74,6 +74,22 @@ app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
 
+app.get("/login", (req, res) => {
+  // if cookie is set display logged in as
+  if (req.cookies['user_id']) {
+    const userID = req.cookies['user_id'];
+    let templateVars = { user: users[userID] };
+    res.render("login", templateVars);
+  } else { // no cookie log in
+    let templateVars = { user: undefined }
+    res.render("login", templateVars);
+  }
+})
+
+app.post("/login", (req, res) => {
+  
+})
+
 app.get("/register", (req, res) => {
   // if cookie is set display id
   if (req.cookies['user_id']) {
