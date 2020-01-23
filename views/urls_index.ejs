@@ -13,15 +13,16 @@
   <main style="margin: 1em;">
     <h3>My URLs</h3>
     <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">Short URL</th>
-          <th scope="col">Long URL</th>
-          <th scope="col">Edit</th>
-          <th scope="col">Delete</th>
-        </tr>
-      </thead>
+
       <% if(user){ %>
+        <thead>
+          <tr>
+            <th scope="col">Short URL</th>
+            <th scope="col">Long URL</th>
+            <th scope="col">Edit</th>
+            <th scope="col">Delete</th>
+          </tr>
+        </thead>
       <tbody>
         <% for(let shortURL in urls) { %>
           <tr>
@@ -30,13 +31,11 @@
             <td>
               <form method="POST" action="/urls/<%=shortURL%>/edit">
                 <button type="submit" class="btn btn-outline-primary">Edit</button>
-                <!-- <input type="submit" value="Edit" style="background-color:white; border-color:rgb(0, 153, 255); color:rgb(0, 153, 255); border-radius: 4px; border-width: 1px;">         -->
               </form>
               </td>
             <td>
             <form method="POST" action="/urls/<%=shortURL%>/delete">
               <button type="submit" class="btn btn-outline-danger">Delete</button>
-              <!-- <input type="submit" value="Delete" style="background-color:white; border-color:red; color:red; border-radius: 4px; border-width: 1px;">           -->
             </form>
             </td>
           </tr>
@@ -44,7 +43,7 @@
       </tbody>
       <% } else{ %>
         <tr>
-          <th scope="col">Please Register or Login First!</th>
+          <th scope="col">Please Register or Login To Start Using TinyApp!</th>
         </tr>
         <% } %>
     </table>
