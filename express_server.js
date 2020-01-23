@@ -7,8 +7,8 @@ const PORT = 8080; // default port 8080
 app.set("view engine", "ejs"); // This tells the Express app to use EJS as its templating engine
 
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  b6UTxQ: { longURL: "https://www.tsn.ca", userID: "aJ48lW" },
+  i3BoGr: { longURL: "https://www.google.ca", userID: "aJ48lW" }
 };
 
 const users = { 
@@ -52,7 +52,7 @@ app.post("/logout", (req, res) => {
 
 app.post("/urls", (req, res) => {
   let newShortUrl = generateRandomString(6);
-  urlDatabase[newShortUrl] = `http://www.${req.body.longURL}`;
+  urlDatabase[newShortUrl] = { longURL: `http://www.${req.body.longURL}`, userID: req.cookies['user_id'] };
   res.redirect("/urls/" + newShortUrl);
 });
 
@@ -162,18 +162,18 @@ app.get("/urls/new", (req, res) => {
 
 app.get("/urls/:shortURL", (req, res) => {
   const userID = req.cookies['user_id'];
-  let templateVars = { user: users[userID], shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
+  let templateVars = { user: users[userID], shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL]['longURL'] };
   res.render("urls_show", templateVars);
 });
 
 app.get("/u/:shortURL", (req, res) => {
-  const longURL = urlDatabase[req.params.shortURL];
+  const longURL = urlDatabase[req.params.shortURL]['longURL'];
   res.redirect(longURL);
 });
 
 app.post("/urls/:shortURL/delete", (req, res) => {
   let shorty = req.params.shortURL;
-  delete urlDatabase[shorty];
+  delete urlDatabase[shorty]['longURL'];
   res.redirect("/urls");
 });
 
@@ -185,6 +185,6 @@ app.post("/urls/:shortURL/edit", (req, res) => {
 app.post("/urls/:shortURL/update", (req, res) => {
   let longy = req.body.longURL;
   let shorty = req.params.shortURL;
-  urlDatabase[shorty] = longy;
+  urlDatabase[shorty]['longURL'] = longy;
   res.redirect("/urls");
 });
