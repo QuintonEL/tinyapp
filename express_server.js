@@ -3,6 +3,7 @@ const app = express();
 var cookieParser = require("cookie-parser");
 app.use(cookieParser());
 const PORT = 8080; // default port 8080
+const bcrypt = require('bcrypt');
 
 app.set("view engine", "ejs"); // This tells the Express app to use EJS as its templating engine
 
@@ -56,6 +57,11 @@ function urlsForUser(id) {
 }
 //console.log(urlsForUser('aJ48lW'))
 
+function passHash(password) {
+  const hashedPassword = bcrypt.hashSync(password, 10);
+  return hashedPassword;
+}
+
 app.post("/logout", (req, res) => {
   res.clearCookie('user_id')
   res.redirect("/urls");
@@ -91,7 +97,7 @@ app.get("/login", (req, res) => {
 })
 
 app.post("/login", (req, res) => {
-    //check for valid input
+  //check for valid input
   if (!req.body.email || !req.body.password) {
     res.status(400).send('Please enter an email and password');
   } else {
@@ -103,12 +109,12 @@ app.post("/login", (req, res) => {
     } else {
       //if they exist already
       //compare passwords
-      if (req.body.password !== thisUser['password']) {
-        res.status(403).send('Incorrect Password');
-      } else {
+      if(bcrypt.compareSync(req.body.password, thisUser['password'])) {
         //set user_id cookie
         res.cookie('user_id', thisUser['id']);
         res.redirect("/urls");
+      } else {
+        res.status(403).send('Incorrect Password');
       }
     }
   }
@@ -136,10 +142,11 @@ app.post("/register", (req, res) => {
     if (!findUserByEmail(req.body.email)) {
       //if they don't exist already
       let userRandomID = generateRandomString(6);
+      let hash = bcrypt.hashSync(req.body.password, 10);
       users[userRandomID] = {
         id: userRandomID, 
         email: req.body.email, 
-        password: req.body.password
+        password: hash
       };
       res.cookie('user_id', userRandomID)
     } else {
@@ -147,6 +154,7 @@ app.post("/register", (req, res) => {
       res.status(400).send('An account with that email already exists!')
     }
   }
+  console.log(users)
   res.redirect("/urls");
 });
 
