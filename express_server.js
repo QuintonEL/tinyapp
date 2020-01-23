@@ -44,6 +44,17 @@ function findUserByEmail(email) {
     }
   }
 }
+//returns urls where the userID is equal to the id of the currently logged in user
+function urlsForUser(id) {
+  let urls = {};
+  for (let obj of Object.keys(urlDatabase)) {
+    if (urlDatabase[obj]['userID'] === id) {
+      urls[obj] = urlDatabase[obj];
+    }
+  }
+  return urls;  
+}
+//console.log(urlsForUser('aJ48lW'))
 
 app.post("/logout", (req, res) => {
   res.clearCookie('user_id')
@@ -145,7 +156,8 @@ app.get("/hello", (req, res) => {
 
 app.get("/urls", (req, res) => {
   const userID = req.cookies['user_id'];
-  let templateVars = { user: users[userID], urls: urlDatabase };
+  console.log(urlsForUser(userID))
+  let templateVars = { user: users[userID], urls: urlsForUser(userID) };
   res.render("urls_index", templateVars);
 });
 

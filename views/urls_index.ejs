@@ -21,19 +21,20 @@
           <th scope="col">Delete</th>
         </tr>
       </thead>
+      <% if(user){ %>
       <tbody>
-        <% for(let url in urls) { %>
+        <% for(let shortURL in urls) { %>
           <tr>
-            <td><%= url %></td>
-            <td><%= urls[url]['longURL']%></td>
+            <td><%= shortURL %></td>
+            <td><%= urls[shortURL]['longURL']%></td>
             <td>
-              <form method="POST" action="/urls/<%=url%>/edit">
+              <form method="POST" action="/urls/<%=shortURL%>/edit">
                 <button type="submit" class="btn btn-outline-primary">Edit</button>
                 <!-- <input type="submit" value="Edit" style="background-color:white; border-color:rgb(0, 153, 255); color:rgb(0, 153, 255); border-radius: 4px; border-width: 1px;">         -->
               </form>
               </td>
             <td>
-            <form method="POST" action="/urls/<%=url%>/delete">
+            <form method="POST" action="/urls/<%=shortURL%>/delete">
               <button type="submit" class="btn btn-outline-danger">Delete</button>
               <!-- <input type="submit" value="Delete" style="background-color:white; border-color:red; color:red; border-radius: 4px; border-width: 1px;">           -->
             </form>
@@ -41,6 +42,11 @@
           </tr>
         <% } %>
       </tbody>
+      <% } else{ %>
+        <tr>
+          <th scope="col">Please Register or Login First!</th>
+        </tr>
+        <% } %>
     </table>
   </main>
   <!-- Bootstrap JS -->
