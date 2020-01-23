@@ -12,15 +12,15 @@
   <%- include ('partials/_header') %>
   <main style="margin: 1em;">
     <h3>My URLs</h3>
-    <table class="table">
+    <table width = '100%'class="table">
 
       <% if(user){ %>
         <thead>
           <tr>
-            <th scope="col">Short URL</th>
-            <th scope="col">Long URL</th>
-            <th scope="col">Edit</th>
-            <th scope="col">Delete</th>
+            <th width='20%' scope="col">Short URL</th>
+            <th width='40%' scope="col">Long URL</th>
+            <th style='text-align: center' width='20%'scope="col">Edit</th>
+            <th style='text-align: center' width='20%'scope="col">Delete</th>
           </tr>
         </thead>
       <tbody>
@@ -28,12 +28,12 @@
           <tr>
             <td><%= shortURL %></td>
             <td><%= urls[shortURL]['longURL']%></td>
-            <td>
+            <td align='center'>
               <form method="POST" action="/urls/<%=shortURL%>/edit">
                 <button type="submit" class="btn btn-outline-primary">Edit</button>
               </form>
               </td>
-            <td>
+            <td align='center'>
             <form method="POST" action="/urls/<%=shortURL%>/delete">
               <button type="submit" class="btn btn-outline-danger">Delete</button>
             </form>
@@ -42,9 +42,11 @@
         <% } %>
       </tbody>
       <% } else{ %>
-        <tr>
-          <th scope="col">Please Register or Login To Start Using TinyApp!</th>
-        </tr>
+        <div class="card text-center">
+          <main style="margin: 1em;">
+            <h1>Please Register or Login To Start Using TinyApp!</h1>
+            </main>
+            </div>
         <% } %>
     </table>
   </main>
