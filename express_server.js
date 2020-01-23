@@ -184,14 +184,24 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 app.post("/urls/:shortURL/delete", (req, res) => {
-  let shorty = req.params.shortURL;
-  delete urlDatabase[shorty]['longURL'];
-  res.redirect("/urls");
+  // Users Can Only Edit or Delete Their Own URLs
+  // if cookie is set and user_id matches database
+  if(req.cookies['user_id'] && req.cookies['user_id'] === urlDatabase[req.params.shortURL].userID) {
+    delete urlDatabase[req.params.shortURL];
+    res.redirect('/urls');
+  } else {
+    res.redirect("/login");
+  }
 });
 
 app.post("/urls/:shortURL/edit", (req, res) => {
-  let shorty = req.params.shortURL;
-  res.redirect("/urls/" + shorty);
+    // Users Can Only Edit or Delete Their Own URLs
+  // if cookie is set and user_id matches database
+  if(req.cookies['user_id'] && req.cookies['user_id'] === urlDatabase[req.params.shortURL].userID) {
+    res.redirect("/urls/" + req.params.shortURL);
+  } else {
+    res.redirect("/login");
+  }
 });
 
 app.post("/urls/:shortURL/update", (req, res) => {
