@@ -70,8 +70,7 @@ app.get("/urls.json", (req, res) => {
 
 app.get("/login", (req, res) => {
   // if cookie is set display logged in as
-  console.log(users)
-  console.log('cookie', req.cookies['user_id'])
+  // if already logged in, go back to urls
   if (req.cookies['user_id']) {
     res.redirect("/urls");
   } else { // no cookie log in
@@ -151,9 +150,14 @@ app.get("/urls", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  const userID = req.cookies['user_id'];
-  let templateVars = { user: users[userID] };
-  res.render("urls_new", templateVars);
+  //if already logged in let them go to page
+  if (req.cookies['user_id']) {
+    const userID = req.cookies['user_id'];
+    let templateVars = { user: users[userID] };
+    res.render("urls_new", templateVars);
+  } else { // not logged in get redirected
+    res.redirect("/urls");
+  }
 });
 
 app.get("/urls/:shortURL", (req, res) => {
