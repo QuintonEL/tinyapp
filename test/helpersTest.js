@@ -1,7 +1,7 @@
 const { assert } = require('chai');
-
 const  { findUserByEmail }  = require('../helpers');
 
+// test user database
 const testUsers = {
   "userRandomID": {
     id: "userRandomID", 

@@ -63,11 +63,6 @@ function urlsForUser(id) {
   }
   return urls;
 }
-//returns hashed version of password
-function passHash(password) {
-  const hashedPassword = bcrypt.hashSync(password, 10);
-  return hashedPassword;
-}
 
 //////////////////////////
 ///// Express Logic /////
