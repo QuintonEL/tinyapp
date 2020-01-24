@@ -10,11 +10,10 @@
 </head>
 <body>
   <%- include ('partials/_header') %>
-  <main style="margin: 1em;">
-    <h3>My URLs</h3>
-    <table width = '100%'class="table">
-
       <% if(user){ %>
+        <main style="margin: 1em;">
+          <h3>My URLs</h3>
+          <table width = '100%'class="table">
         <thead>
           <tr>
             <th width='20%' scope="col">Short URL</th>
@@ -42,11 +41,9 @@
         <% } %>
       </tbody>
       <% } else{ %>
-        <div class="card text-center">
-          <main style="margin: 1em;">
-            <h1>Please Register or Login To Start Using TinyApp!</h1>
-            </main>
-            </div>
+        <div class="alert alert-primary" role="alert" align='center' style='position: relative; top: 50px;'>
+          Please Register Or Log In To Use TinyApp!
+        </div>
         <% } %>
     </table>
   </main>

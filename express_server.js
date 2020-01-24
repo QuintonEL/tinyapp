@@ -43,7 +43,7 @@ const users = {
 ///// FUNCTIONS /////
 ////////////////////
 
-function generateRandomString(length) {
+const generateRandomString = function(length) {
   let newStr = '';
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   const charactersLength = characters.length;
@@ -51,10 +51,10 @@ function generateRandomString(length) {
     newStr += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return newStr;
-}
+};
 
 //returns urls where the userID is equal to the id of the currently logged in user
-function urlsForUser(id) {
+const urlsForUser = function(id) {
   let urls = {};
   for (let obj of Object.keys(urlDatabase)) {
     if (urlDatabase[obj]['userID'] === id) {
@@ -62,7 +62,7 @@ function urlsForUser(id) {
     }
   }
   return urls;
-}
+};
 
 //////////////////////////
 ///// Express Logic /////
