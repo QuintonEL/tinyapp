@@ -7,4 +7,15 @@ function findUserByEmail(email, users) {
   }
 }
 
-module.exports = { findUserByEmail };
+// generates a random string to be used as the new short URL
+const generateRandomString = function(length) {
+  let newStr = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+    newStr += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return newStr;
+};
+
+module.exports = { findUserByEmail, generateRandomString };
